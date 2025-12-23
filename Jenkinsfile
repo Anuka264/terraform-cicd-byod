@@ -13,12 +13,14 @@ pipeline {
         stage('Terraform Initialization') {
             steps {
                 sh 'terraform init'
+                def branch = env.BRANCH_NAME ?: "main"
                 sh "cat ${env.BRANCH_NAME}.tfvars"
             }
         }
 
         stage('Terraform Plan') {
             steps {
+                def branch = env.BRANCH_NAME ?: "main"
                 sh "terraform plan -var-file=${env.BRANCH_NAME}.tfvars -out=tfplan"
             }
         }
