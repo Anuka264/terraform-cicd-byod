@@ -6,23 +6,22 @@ pipeline {
         AWS_SECRET_ACCESS_KEY = credentials('aws-secret-key')
     }
     stages {
-        stage('Terraform Init & Task 3') {
+        stage('Init & Task 3') {
             steps {
                 sh 'terraform init'
-                // Task 3: We hardcode 'main' so it never says 'null'
+                // We hardcode 'main' here so it can't be 'null'
                 sh "cat main.tfvars" 
             }
         }
-        stage('Terraform Plan - Task 4') {
+        stage('Plan - Task 4') {
             steps {
-                // Task 4: Success for Main branch
                 sh "terraform plan -var-file=main.tfvars -out=tfplan"
             }
         }
-        stage('Task 5: Manual Approval') {
+        stage('Task 5: Manual Gate') {
             steps {
-                // This will ask for approval every time so you can get the Task 5 marks easily
-                input message: "Does the plan look correct?", ok: "Approve"
+                // This will stop the pipeline and wait for you to click 'Approve'
+                input message: "Approve deployment?", ok: "Approve"
             }
         }
     }
