@@ -19,19 +19,20 @@ pipeline {
         }
 
         stage('Task 2: Inventory Management') {
-            steps {
-                withCredentials([file(credentialsId: 'splunk-ssh-key', variable: 'KEY_FILE')]) {
-                    script {
+    steps {
+        withCredentials([file(credentialsId: 'splunk-ssh-key', variable: 'KEY_FILE')]) {
+            script {
+                // 1. Create a brand new, unique folder name using the Build Number
+                // This ensures we NEVER hit a permission conflict with old files
+                def uniqueFolder = "${WORKSPACE}/keys_${BUILD_NUMBER}"
+                sh "mkdir -p ${uniqueFolder}"
                 
-                    sh "mkdir -p ${WORKSPACE}/keys"
+                // 2. Copy to the unique folder
+                sh "cp ${KEY_FILE} ${uniqueFolder}/demo1.pem"
+                sh "chmod 400 ${uniqueFolder}/demo1.pem"
                 
-                    sh "cp ${KEY_FILE} ${WORKSPACE}/keys/demo1.pem"
-                
-                sh "chmod 400 ${WORKSPACE}/keys/demo1.pem"
-                
-                def keyPath = "${WORKSPACE}/keys/demo1.pem"
-                def content = "[splunk_servers]\n${env.INSTANCE_IP} ansible_user=ubuntu ansible_ssh_private_key_file=${keyPath}"
-                
+                // 3. Create the inventory pointing to this unique path
+                def content = "[splunk_servers]\n${env.INSTANCE_IP} ansible_user=ubuntu ansible_ssh_private_key_file=${uniqueFolder}/demo1.pem"
                 writeFile file: 'dynamic_inventory.ini', text: content
                 
                 sh "cat dynamic_inventory.ini"
