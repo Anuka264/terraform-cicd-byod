@@ -52,6 +52,8 @@ pipeline {
         stage('Task 4: Splunk Install') {
             steps {
                 script {
+                    sh "sleep 30"
+
                     withEnv(["ANSIBLE_HOST_KEY_CHECKING=False"]) {
                         ansiblePlaybook(
                         playbook: 'playbooks/splunk.yml', 
