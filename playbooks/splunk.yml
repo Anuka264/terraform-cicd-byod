@@ -7,9 +7,9 @@
       apt:
         update_cache: yes
 
-    - name: Download Splunk package using wget
+    - name: Download Splunk package
       shell: |
-        wget -O /tmp/splunk.deb "https://download.splunk.com/products/splunk/releases/9.4.0/linux/splunk-9.4.0-6b453916960d-linux-2.6-amd64.deb"
+        wget -q -O /tmp/splunk.deb "https://download.splunk.com/products/splunk/releases/9.4.0/linux/splunk-9.4.0-6b453916960d-linux-2.6-amd64.deb" --header="User-Agent: Mozilla/5.0"
       args:
         creates: /tmp/splunk.deb
 
