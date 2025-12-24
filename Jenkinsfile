@@ -22,17 +22,24 @@ pipeline {
             steps {
                 withCredentials([file(credentialsId: 'splunk-ssh-key', variable: 'KEY_FILE')]) {
                     script {
-                        sh "cp ${KEY_FILE} ${WORKSPACE}/demo1.pem"
-                        sh "chmod 400 ${WORKSPACE}/demo1.pem"
                 
-                        def content = "[splunk_servers]\n${env.INSTANCE_IP} ansible_user=ubuntu ansible_ssh_private_key_file=${WORKSPACE}/demo1.pem"
-                        writeFile file: 'dynamic_inventory.ini', text: content
+                    sh "mkdir -p ${WORKSPACE}/keys"
                 
-                        sh "cat dynamic_inventory.ini"
-                    }
-                }
+                    sh "cp ${KEY_FILE} ${WORKSPACE}/keys/demo1.pem"
+                
+                sh "chmod 400 ${WORKSPACE}/keys/demo1.pem"
+                
+                def keyPath = "${WORKSPACE}/keys/demo1.pem"
+                def content = "[splunk_servers]\n${env.INSTANCE_IP} ansible_user=ubuntu ansible_ssh_private_key_file=${keyPath}"
+                
+                writeFile file: 'dynamic_inventory.ini', text: content
+                
+                sh "cat dynamic_inventory.ini"
             }
         }
+    }
+}
+        
 
         stage('Task 3: Health Verification') {
             steps {
