@@ -9,7 +9,7 @@
 
     - name: Download Splunk package
       get_url:
-        url: "https://download.splunk.com/products/splunk/releases/9.1.0.1/linux/splunk-9.1.0.1-7773d08292e1-linux-2.6-amd64.deb"
+        url: "https://download.splunk.com/products/splunk/releases/9.4.0/linux/splunk-9.4.0-6b453916960d-linux-2.6-amd64.deb"
         dest: "/tmp/splunk.deb"
 
     - name: Install Splunk .deb package
@@ -19,4 +19,4 @@
     - name: Accept license and start Splunk
       shell: "/opt/splunk/bin/splunk start --accept-license --answer-yes --no-prompt --seed-passwd changeme123"
       args:
-        creates: /opt/splunk/etc/splunk.launch
+        creates: /opt/splunk/etc/splunk.ready
