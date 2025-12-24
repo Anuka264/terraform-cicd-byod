@@ -16,3 +16,8 @@ variable "instance_type" {
 variable "subnet_id" {
   type = string
 }
+
+variable "region" {
+  type    = string
+  default = "us-east-1"
+}
