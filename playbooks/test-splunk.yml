@@ -1,0 +1,19 @@
+---
+- name: Verify Splunk Service
+  hosts: splunk_servers
+  tasks:
+    - name: Check if Splunk is responding on port 8000
+      wait_for:
+        host: "{{ inventory_hostname }}"
+        port: 8000
+        state: started
+        timeout: 30
+
+    - name: Verify Splunk process is running
+      shell: "ps aux | grep splunkd"
+      register: splunk_status
+
+    - name: Show status
+      debug:
+        msg: "Splunk is up and running!"
+      when: splunk_status.rc == 0
