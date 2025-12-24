@@ -9,12 +9,13 @@ pipeline {
         }
         stage('Plan - Task 4') {
             steps {
-                // We wrap the plan in withCredentials to ensure they are fresh and clean
+                // We use 'credentialsId' to match the IDs you showed me in your screenshot
                 withCredentials([
                     string(credentialsId: 'aws-access-key', variable: 'AWS_ACCESS_KEY_ID'),
                     string(credentialsId: 'aws-secret-key', variable: 'AWS_SECRET_ACCESS_KEY')
                 ]) {
-                    sh "terraform plan -var-file=main.tfvars -out=tfplan"
+                    // Adding -input=false ensures terraform never stops to ask questions
+                    sh "terraform plan -var-file=main.tfvars -out=tfplan -input=false"
                 }
             }
         }
