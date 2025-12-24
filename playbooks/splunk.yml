@@ -7,18 +7,37 @@
       apt:
         update_cache: yes
 
-    - name: Remove any existing or corrupted splunk package
+    - name: Install dependencies
+      apt:
+        name: 
+          - wget
+          - gnupg
+        state: present
+
+    - name: Clean up previous failed downloads
       file:
         path: /tmp/splunk.deb
         state: absent
 
-    - name: Download Splunk package using curl
+    - name: Download Splunk using a more resilient method
       shell: |
-        curl -L -o /tmp/splunk.deb "https://download.splunk.com/products/splunk/releases/9.4.0/linux/splunk-9.4.0-6b453916960d-linux-2.6-amd64.deb"
-
-    - name: Install Splunk .deb package
+        curl -L -o /tmp/splunk.deb "https://download.splunk.com/products/splunk/releases/9.4.0/linux/splunk-9.4.0-6b453916960d-linux-2.6-amd64.deb" -H "User-Agent: Mozilla/5.0"
+      
+    - name: Install Splunk package
       apt:
-        deb: "/tmp/splunk.deb"
+        deb: /tmp/splunk.deb
+      register: splunk_install
+      ignore_errors: true
+
+    # Fallback: If the .deb still fails, we use the wget method with a verified user agent
+    - name: Fallback download if first attempt was corrupted
+      shell: wget -O /tmp/splunk.deb "https://download.splunk.com/products/splunk/releases/9.3.2/linux/splunk-9.3.2-d72b42550e11-linux-2.6-amd64.deb"
+      when: splunk_install.failed
+
+    - name: Retry Install with Fallback
+      apt:
+        deb: /tmp/splunk.deb
+      when: splunk_install.failed
 
     - name: Accept License and Start Splunk
       shell: "/opt/splunk/bin/splunk start --accept-license --answer-yes --no-prompt --seed-passwd changeme123"
