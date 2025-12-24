@@ -1,7 +1,7 @@
 ---
 - name: Install Splunk on Ubuntu
   hosts: splunk_servers
-  become: yes
+  become: true
   tasks:
     - name: Update apt cache
       apt:
