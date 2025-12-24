@@ -7,16 +7,17 @@
       apt:
         update_cache: yes
 
-    - name: Download Splunk package
-      get_url:
-        url: "https://download.splunk.com/products/splunk/releases/9.4.0/linux/splunk-9.4.0-6b453916960d-linux-2.6-amd64.deb"
-        dest: "/tmp/splunk.deb"
+    - name: Download Splunk package using wget
+      shell: |
+        wget -O /tmp/splunk.deb "https://download.splunk.com/products/splunk/releases/9.4.0/linux/splunk-9.4.0-6b453916960d-linux-2.6-amd64.deb"
+      args:
+        creates: /tmp/splunk.deb
 
     - name: Install Splunk .deb package
       apt:
         deb: "/tmp/splunk.deb"
 
-    - name: Accept license and start Splunk
+    - name: Accept License and Start Splunk
       shell: "/opt/splunk/bin/splunk start --accept-license --answer-yes --no-prompt --seed-passwd changeme123"
       args:
         creates: /opt/splunk/etc/splunk.ready
