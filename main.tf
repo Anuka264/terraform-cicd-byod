@@ -20,7 +20,8 @@ variable "subnet_id" {}
 resource "aws_instance" "example" {
   ami           = "ami-0ecb62995f68bb549"
   instance_type = var.instance_type
-  subnet_id     = var.subnet_id 
+  subnet_id     = var.subnet_id
+  associate_public_ip_address = true
 
   tags = {
     Name = "${var.project_name}-instance"

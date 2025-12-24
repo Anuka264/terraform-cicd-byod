@@ -1,18 +1,13 @@
-**/.terraform/*
+awscliv2.zip
+aws/
+dist/
 
+.terraform/
 *.tfstate
 *.tfstate.*
+.terraform.tfstate.lock.info
+.terraform.lock.hcl
 
-crash.log
-crash.*.log
+*.pem
 
-tfplan
-
-.env
-.python-version
-*.log
-
-.vscode/
-
-.DS_Store
-Thumbs.db
+*.tfvars
