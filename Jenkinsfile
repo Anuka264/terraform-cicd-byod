@@ -49,20 +49,20 @@ pipeline {
             }
         }
 
-        stage('Task 4: Splunk Install') {
-            steps {
-                script {
-                    sh "sleep 30"
+        // stage('Task 4: Splunk Install') {
+        //     steps {
+        //         script {
+        //             sh "sleep 30"
 
-                    withEnv(["ANSIBLE_HOST_KEY_CHECKING=False"]) {
-                        ansiblePlaybook(
-                        playbook: 'playbooks/splunk.yml', 
-                        inventory: 'dynamic_inventory.ini'
-                        )
-                    }
-                }
-            }
-        }
+        //             withEnv(["ANSIBLE_HOST_KEY_CHECKING=False"]) {
+        //                 ansiblePlaybook(
+        //                 playbook: 'playbooks/splunk.yml', 
+        //                 inventory: 'dynamic_inventory.ini'
+        //                 )
+        //             }
+        //         }
+        //     }
+        // }
 
         stage('Task 5: Cleanup Gate') {
             steps {
