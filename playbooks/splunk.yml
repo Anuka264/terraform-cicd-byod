@@ -15,8 +15,6 @@
     - name: Download Splunk package using curl
       shell: |
         curl -L -o /tmp/splunk.deb "https://download.splunk.com/products/splunk/releases/9.4.0/linux/splunk-9.4.0-6b453916960d-linux-2.6-amd64.deb"
-      args:
-        warn: false
 
     - name: Install Splunk .deb package
       apt:
