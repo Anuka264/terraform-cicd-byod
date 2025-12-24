@@ -22,10 +22,13 @@ pipeline {
             steps {
                 withCredentials([file(credentialsId: 'splunk-ssh-key', variable: 'KEY_FILE')]) {
                     script {
-                        sh "cp ${KEY_FILE} ./demo1.pem"
-                        sh "chmod 400 ./demo1.pem"
-                        def content = "[splunk_servers]\n${env.INSTANCE_IP} ansible_user=ubuntu ansible_ssh_private_key_file=./demo1.pem"
+                        sh "cp ${KEY_FILE} ${WORKSPACE}/demo1.pem"
+                        sh "chmod 400 ${WORKSPACE}/demo1.pem"
+                
+                        def content = "[splunk_servers]\n${env.INSTANCE_IP} ansible_user=ubuntu ansible_ssh_private_key_file=${WORKSPACE}/demo1.pem"
                         writeFile file: 'dynamic_inventory.ini', text: content
+                
+                        sh "cat dynamic_inventory.ini"
                     }
                 }
             }
