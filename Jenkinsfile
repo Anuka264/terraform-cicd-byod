@@ -43,13 +43,21 @@ pipeline {
 
         stage('Task 3: Health Verification') {
             steps {
-                sh "aws ec2 wait instance-status-ok --instance-ids ${env.INSTANCE_ID}"
+                sh "aws ec2 wait instance-status-ok --instance-ids ${env.INSTANCE_ID} --region us-east-1"
+                echo "Instance is healthy and ready for Splunk install!"
             }
         }
 
         stage('Task 4: Splunk Install') {
             steps {
-                ansiblePlaybook(playbook: 'playbooks/splunk.yml', inventory: 'dynamic_inventory.ini')
+                script {
+                    withEnv(["ANSIBLE_HOST_KEY_CHECKING=False"]) {
+                        ansiblePlaybook(
+                        playbook: 'playbooks/splunk.yml', 
+                        inventory: 'dynamic_inventory.ini'
+                        )
+                    }
+                }
             }
         }
 
