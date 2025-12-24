@@ -1,17 +1,22 @@
 ---
 - name: Install Splunk on Ubuntu
   hosts: splunk_servers
-  become: true
+  become: yes
   tasks:
     - name: Update apt cache
       apt:
         update_cache: yes
 
-    - name: Download Splunk package
+    - name: Remove any existing or corrupted splunk package
+      file:
+        path: /tmp/splunk.deb
+        state: absent
+
+    - name: Download Splunk package using curl
       shell: |
-        wget -q -O /tmp/splunk.deb "https://download.splunk.com/products/splunk/releases/9.4.0/linux/splunk-9.4.0-6b453916960d-linux-2.6-amd64.deb" --header="User-Agent: Mozilla/5.0"
+        curl -L -o /tmp/splunk.deb "https://download.splunk.com/products/splunk/releases/9.4.0/linux/splunk-9.4.0-6b453916960d-linux-2.6-amd64.deb"
       args:
-        creates: /tmp/splunk.deb
+        warn: false
 
     - name: Install Splunk .deb package
       apt:
